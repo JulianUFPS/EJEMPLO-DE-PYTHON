@@ -2,6 +2,7 @@ import pygame
 from spritesheet import Spritesheet
 import math
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -12,19 +13,41 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.position, self.velocity = pygame.math.Vector2(0,0), pygame.math.Vector2(0,0)
         self.acceleration = pygame.math.Vector2(0,self.gravity)
-        
+
+        self.walk_animation_delay = 8  # Retardo en milisegundos entre cada cambio de frame de la animación de caminar
+        self.walk_animation_timer = 0    # Temporizador para controlar el retardo de la animación de caminar
+
+        self.walk_animation_frames = []  # Almacenará los frames de la animación de caminar
+        self.walk_animation_index = 0    # Índice actual de la animación de caminar
+
+        self.walk_animation_frames.append(pygame.image.load("AnimacionesSpriteSheets/AnimacionPinguino/sprite_0.png"))
+        self.walk_animation_frames.append(pygame.image.load("AnimacionesSpriteSheets/AnimacionPinguino/sprite_1.png"))
+        self.walk_animation_frames.append(pygame.image.load("AnimacionesSpriteSheets/AnimacionPinguino/sprite_2.png"))
+        self.walk_animation_frames.append(pygame.image.load("AnimacionesSpriteSheets/AnimacionPinguino/sprite_3.png"))
+
 
     def draw(self, display):
         if self.FACING_LEFT:
-            display.blit(pygame.transform.flip(self.image, True, False), (self.rect.x, self.rect.y))
+            display.blit(pygame.transform.flip(self.walk_animation_frames[self.walk_animation_index], True, False), (self.rect.x, self.rect.y))
         else:
-            display.blit(self.image, (self.rect.x, self.rect.y))
+            display.blit(self.walk_animation_frames[self.walk_animation_index], (self.rect.x, self.rect.y))
+        
 
     def update(self, dt, tiles):
         self.horizontal_movement(dt)
         self.checkCollisionsx(tiles)
         self.vertical_movement(dt)
         self.checkCollisionsy(tiles)
+
+        # Avanzar al siguiente frame de la animación de caminar
+        if self.LEFT_KEY or self.RIGHT_KEY:
+            self.walk_animation_timer += dt
+        if self.walk_animation_timer >= self.walk_animation_delay:
+            self.walk_animation_index = (self.walk_animation_index + 1) % len(self.walk_animation_frames)
+            self.walk_animation_timer = 0
+        if not self.LEFT_KEY and not self.RIGHT_KEY:
+            self.walk_animation_index = 0
+        
 
     def horizontal_movement(self,dt):
         self.acceleration.x = 0
@@ -108,6 +131,9 @@ class Bola:
         self.radius = 5
         self.color = (255, 255, 255)
         self.player = player
+        ######ENEMIGO######
+        self.enemigos = []  # Lista de enemigos
+
         ########### InstaClick ##########
         self.lanzarBola=False
         self.ContadorBoolean=False
@@ -129,7 +155,6 @@ class Bola:
         for tile in tiles:
             if pygame.Rect(self.xBola, self.yBola, self.radius * 2, self.radius * 2).colliderect(tile.rect):
                 self.colision = True
-                print(self.colision)
                 
 
     def update(self, dt, player_position, tiles):
@@ -138,7 +163,22 @@ class Bola:
         else:
             self.position = player_position + pygame.math.Vector2(40, -20)
         self.check_collisions(tiles)
+        self.check_enemy_collision()
 
+    def check_enemy_collision(self):
+        for enemigo in self.enemigos:
+            if not self.colision:
+                if pygame.Rect(self.xBola, self.yBola, self.radius * 2, self.radius * 2).colliderect(enemigo.rect) and enemigo.vivo:
+                    # Restablecer la posición original de la bola
+                    self.xBola, self.yBola = self.xO, self.yO
+                    self.t = 0
+                    self.xBola = self.xO
+                    self.yBola = self.yO
+                    self.colision = False
+                    self.ContadorBoolean=False
+                    enemigo.hit_count +=1
+                    break
+    
     def throwClick(self):
         if(self.lanzarBola): #Lo que pase aca SOLO pasa en el instante en el que se da el click para la bola
             self.xO, self.yO = self.position

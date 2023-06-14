@@ -49,6 +49,14 @@ class TileMap():
                     tiles.append(Tile('nieve.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '2':
                     tiles.append(Tile('palancaOFF.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '3':
+                    tiles.append(Tile('barandaCentro.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '4':
+                    tiles.append(Tile('barandaRectaX.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '5':
+                    tiles.append(Tile('barandaFinalDerecha.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '7':
+                    tiles.append(Tile('barandaFinalIzquierda.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '1':
                     tiles.append(Tile('caja.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '8':
@@ -59,8 +67,16 @@ class TileMap():
                     tiles.append(Tile('barandaRectaY.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '11':
                     tiles.append(Tile('palancaON.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '12':
+                    tiles.append(Tile('placeHolder.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '14':
                     tiles.append(Tile('puerta1.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '15':
+                    tiles.append(Tile('puertaVolteada1.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '16':
+                    tiles.append(Tile('puertaVolteada2.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                elif tile == '17':
+                    tiles.append(Tile('piso.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                 elif tile == '19':
                     tiles.append(Tile('puerta2.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
                     # Move to next tile in current row
